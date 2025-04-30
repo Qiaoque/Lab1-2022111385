@@ -318,53 +318,6 @@ std::map<std::string, std::pair<double, std::vector<std::string>>> Graph::shorte
     return result;
 }
 
-// // Calculate PageRank
-// std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, int iterations) const {
-//     std::map<std::string, double> pageRank;
-
-//     // Initialize PageRank values
-//     double initialRank = 1.0 / adjacencyList.size();
-//     for (const auto& entry : adjacencyList) {
-//         pageRank[entry.first] = initialRank;
-//     }
-
-//     // Iterate to refine PageRank values
-//     for (int i = 0; i < iterations; ++i) {
-//         std::map<std::string, double> newRank;
-
-//         // Initialize new ranks with (1-d)/N
-//         double baseRank = (1.0 - dampingFactor) / adjacencyList.size();
-//         for (const auto& entry : adjacencyList) {
-//             newRank[entry.first] = baseRank;
-//         }
-
-//         // Calculate influence from each vertex
-//         for (const auto& entry : adjacencyList) {
-//             const std::string& vertex = entry.first;
-//             const std::vector<Edge>& edges = entry.second;
-
-//             if (!edges.empty()) {
-//                 // Calculate total weight of outgoing edges
-//                 double totalWeight = 0;
-//                 for (const Edge& edge : edges) {
-//                     totalWeight += edge.weight;
-//                 }
-
-//                 // Distribute rank to neighbors
-//                 for (const Edge& edge : edges) {
-//                     double contribution = dampingFactor * pageRank[vertex] * (edge.weight / totalWeight);
-//                     newRank[edge.dest] += contribution;
-//                 }
-//             }
-//         }
-
-//         // Update PageRank values
-//         pageRank = newRank;
-//     }
-
-//     return pageRank;
-// }
-
 // Perform random walk on the graph
 std::vector<std::string> Graph::randomWalk() {
     if (adjacencyList.empty()) {
@@ -426,8 +379,7 @@ std::vector<std::string> Graph::getAllVertices() const {
 }
 
 // Calculate PageRank with custom initial ranks
-std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, int iterations,
-    std::map<std::string, double> customInitialRanks) const {
+std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, int iterations, std::map<std::string, double> customInitialRanks) const {
     std::map<std::string, double> pageRank;
 
     // Initialize PageRank values - use custom ranks if provided, or default to uniform distribution
