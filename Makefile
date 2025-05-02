@@ -8,7 +8,7 @@ INC_DIR := include
 BIN_DIR := bin
 OBJ_DIR := obj
 TEST_DIR := test
-TEST_FILE := $(TEST_DIR)/test.txt
+TEST_FILE := $(TEST_DIR)/Easy_Test.txt
 
 # 源文件和目标文件
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)
