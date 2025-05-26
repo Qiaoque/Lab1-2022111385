@@ -4,7 +4,7 @@
 bool Graph::buildFromFile(const std::string& filePath) {
     std::ifstream file(filePath);
     if (!file.is_open()) {
-        std::cerr << "Error: Could not open file " << filePath << std::endl;
+        std::cerr << "Error: Could not open file " << filePath << '\n';
         return false;
     }
 
@@ -64,7 +64,7 @@ void Graph::addEdge(const std::string& src, const std::string& dest) {
 
     // If edge doesn't exist, add it
     if (!found) {
-        adjacencyList[src].push_back(Edge(dest, 1));
+        adjacencyList[src].emplace_back(std::string(dest), 1);
     }
 
     // Ensure dest is in the adjacency list (even if it has no outgoing edges)
@@ -75,7 +75,7 @@ void Graph::addEdge(const std::string& src, const std::string& dest) {
 
 // Display the graph
 void Graph::displayGraph() const {
-    std::cout << BLUE << "\n=== Directed Graph Representation ===" << RESET << std::endl;
+    std::cout << BLUE << "\n=== Directed Graph Representation ===" << RESET << '\n';
 
     for (const auto& entry : adjacencyList) {
         const std::string& vertex = entry.first;
@@ -94,7 +94,7 @@ void Graph::displayGraph() const {
                 first = false;
             }
         }
-        std::cout << std::endl;
+        std::cout << '\n';
     }
 }
 
@@ -102,7 +102,7 @@ void Graph::displayGraph() const {
 bool Graph::saveGraphToFile(const std::string& filename) const {
     std::ofstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error: Could not open file " << filename << " for writing." << std::endl;
+        std::cerr << "Error: Could not open file " << filename << " for writing." << '\n';
         return false;
     }
 
@@ -123,8 +123,8 @@ bool Graph::saveGraphToFile(const std::string& filename) const {
     file << "}\n";
     file.close();
 
-    std::cout << "Graph saved to " << filename << " (DOT format)" << std::endl;
-    std::cout << "To visualize: install Graphviz and run 'dot -Tpng " << filename << " -o graph.png'" << std::endl;
+    std::cout << "Graph saved to " << filename << " (DOT format)" << '\n';
+    std::cout << "To visualize: install Graphviz and run 'dot -Tpng " << filename << " -o graph.png'" << '\n';
 
     return true;
 }
@@ -318,53 +318,6 @@ std::map<std::string, std::pair<double, std::vector<std::string>>> Graph::shorte
     return result;
 }
 
-// // Calculate PageRank
-// std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, int iterations) const {
-//     std::map<std::string, double> pageRank;
-
-//     // Initialize PageRank values
-//     double initialRank = 1.0 / adjacencyList.size();
-//     for (const auto& entry : adjacencyList) {
-//         pageRank[entry.first] = initialRank;
-//     }
-
-//     // Iterate to refine PageRank values
-//     for (int i = 0; i < iterations; ++i) {
-//         std::map<std::string, double> newRank;
-
-//         // Initialize new ranks with (1-d)/N
-//         double baseRank = (1.0 - dampingFactor) / adjacencyList.size();
-//         for (const auto& entry : adjacencyList) {
-//             newRank[entry.first] = baseRank;
-//         }
-
-//         // Calculate influence from each vertex
-//         for (const auto& entry : adjacencyList) {
-//             const std::string& vertex = entry.first;
-//             const std::vector<Edge>& edges = entry.second;
-
-//             if (!edges.empty()) {
-//                 // Calculate total weight of outgoing edges
-//                 double totalWeight = 0;
-//                 for (const Edge& edge : edges) {
-//                     totalWeight += edge.weight;
-//                 }
-
-//                 // Distribute rank to neighbors
-//                 for (const Edge& edge : edges) {
-//                     double contribution = dampingFactor * pageRank[vertex] * (edge.weight / totalWeight);
-//                     newRank[edge.dest] += contribution;
-//                 }
-//             }
-//         }
-
-//         // Update PageRank values
-//         pageRank = newRank;
-//     }
-
-//     return pageRank;
-// }
-
 // Perform random walk on the graph
 std::vector<std::string> Graph::randomWalk() {
     if (adjacencyList.empty()) {
@@ -376,6 +329,7 @@ std::vector<std::string> Graph::randomWalk() {
 
     // Choose a random starting vertex
     std::vector<std::string> vertices;
+    vertices.reserve(adjacencyList.size()); // 预分配容量
     for (const auto& entry : adjacencyList) {
         vertices.push_back(entry.first);
     }
@@ -416,18 +370,19 @@ bool Graph::containsWord(const std::string& word) const {
     return adjacencyList.find(normalizedWord) != adjacencyList.end();
 }
 
-// Get all vertices (words) in the graph
-std::vector<std::string> Graph::getAllVertices() const {
-    std::vector<std::string> vertices;
-    for (const auto& entry : adjacencyList) {
-        vertices.push_back(entry.first);
-    }
-    return vertices;
-}
+// // Get all vertices (words) in the graph
+// std::vector<std::string> Graph::getAllVertices() const {
+//     std::vector<std::string> vertices;
+//     vertices.reserve(adjacencyList.size()); // 预分配容量
+//     for (const auto& entry : adjacencyList) {
+//         vertices.push_back(entry.first);
+//     }
+//     return vertices;
+// }
 
 // Calculate PageRank with custom initial ranks
-std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, int iterations,
-    std::map<std::string, double> customInitialRanks) const {
+std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, 
+    std::map<std::string, double> customInitialRanks, int iterations) const {
     std::map<std::string, double> pageRank;
 
     // Initialize PageRank values - use custom ranks if provided, or default to uniform distribution
@@ -455,7 +410,7 @@ std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, int
     }
     else {
         // Use traditional uniform distribution
-        double initialRank = 1.0 / adjacencyList.size();
+        double initialRank = 1.0 / static_cast<double>(adjacencyList.size());
         printf("initialRank: %f\n", initialRank);
         for (const auto& entry : adjacencyList) {
             pageRank[entry.first] = initialRank;
@@ -471,7 +426,7 @@ std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, int
         double danglingSum = 0.0;
 
         // Initialize new ranks with (1-d)/N
-        double baseRank = (1.0 - dampingFactor) / totalVertices;
+        double baseRank = (1.0 - dampingFactor) / static_cast<double>(totalVertices);
         for (const auto& entry : adjacencyList) {
             newRank[entry.first] = baseRank;
         }
@@ -488,7 +443,7 @@ std::map<std::string, double> Graph::calculatePageRank(double dampingFactor, int
         }
 
         // Distribute the dangling node PageRank values evenly to all vertices
-        double danglingContribution = dampingFactor * danglingSum / totalVertices;
+        double danglingContribution = dampingFactor * danglingSum / static_cast<double>(totalVertices);
         for (auto& entry : newRank) {
             entry.second += danglingContribution;
         }
@@ -529,24 +484,25 @@ std::map<std::string, double> Graph::calculateTfIdfRanks(const std::string& file
     // Use the original text to calculate TF-IDF
     std::ifstream file(filePath);
     if (!file.is_open()) {
-        std::cerr << "Error: Could not open file " << filePath << " for TF-IDF calculation." << std::endl;
+        std::cerr << "Error: Could not open file " << filePath << " for TF-IDF calculation." << '\n';
         return tfIdfRanks;
     }
 
     // Count term frequencies
     std::string line;
     std::vector<std::string> sentences;
+    sentences.reserve(100); // Reserve space for sentences
 
     // Read the file line by line
     while (std::getline(file, line)) {
         if (!line.empty()) {
-            sentences.push_back(line);
+            sentences.emplace_back(line);
         }
     }
     file.close();
 
     // Handle case with only one line/document
-    int numDocs = sentences.size();
+    size_t numDocs = sentences.size();
     if (numDocs == 0) {
         return tfIdfRanks; // Return empty map if no content
     }
@@ -555,6 +511,7 @@ std::map<std::string, double> Graph::calculateTfIdfRanks(const std::string& file
     if (numDocs == 1) {
         std::string content = sentences[0];
         sentences.clear();
+        sentences.reserve(100); // Reserve space for split sentences
 
         // Split by punctuation or every N words to create virtual documents
         std::stringstream ss(content);
@@ -568,7 +525,7 @@ std::map<std::string, double> Graph::calculateTfIdfRanks(const std::string& file
             wordCount++;
 
             if (wordCount >= maxWordsPerSentence) {
-                sentences.push_back(currentSentence);
+                sentences.emplace_back(currentSentence);
                 currentSentence = "";
                 wordCount = 0;
             }
@@ -576,7 +533,7 @@ std::map<std::string, double> Graph::calculateTfIdfRanks(const std::string& file
 
         // Add any remaining words as the last sentence
         if (!currentSentence.empty()) {
-            sentences.push_back(currentSentence);
+            sentences.emplace_back(currentSentence);
         }
 
         // Update numDocs
@@ -611,7 +568,7 @@ std::map<std::string, double> Graph::calculateTfIdfRanks(const std::string& file
         double tfidf = 0.5; // Start with a reasonable default
 
         if (termFrequency.find(vertex) != termFrequency.end()) {
-            double tf = static_cast<double>(termFrequency[vertex]);
+            auto tf = static_cast<double>(termFrequency[vertex]);
 
             // Avoid division by zero and log(1) = 0 issues
             if (docFrequency.find(vertex) != docFrequency.end() && docFrequency[vertex] > 0 && numDocs > 1) {
@@ -646,7 +603,7 @@ std::map<std::string, double> Graph::calculateTfIdfRanks(const std::string& file
     }
     else {
         // Fallback to uniform distribution if sum is 0
-        double uniformRank = 1.0 / tfIdfRanks.size();
+        double uniformRank = 1.0 / static_cast<double>(tfIdfRanks.size());
         for (auto& entry : tfIdfRanks) {
             entry.second = uniformRank;
         }
@@ -660,5 +617,5 @@ std::map<std::string, double> Graph::calculatePageRankWithTfIdf(const std::strin
     double dampingFactor,
     int iterations) const {
     std::map<std::string, double> tfIdfRanks = calculateTfIdfRanks(filePath);
-    return calculatePageRank(dampingFactor, iterations, tfIdfRanks);
+    return calculatePageRank(dampingFactor, tfIdfRanks, iterations);
 }

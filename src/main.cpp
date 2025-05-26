@@ -1,44 +1,44 @@
 #include "../include/Tools.h"
 
 // Main function to handle user interface
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
     if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <text_file>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <text_file>" << '\n';
         return 1;
     }
 
     std::string fileName = argv[1];
     Graph graph;
 
-    std::cout << "Reading file: " << fileName << std::endl;
+    std::cout << "Reading file: " << fileName << '\n';
     if (!graph.buildFromFile(fileName)) {
-        std::cerr << "Failed to build graph from file." << std::endl;
+        std::cerr << "Failed to build graph from file." << '\n';
         return 1;
     }
 
-    std::cout << BLUE << "Graph built successfully!" << RESET << std::endl;
+    std::cout << BLUE << "Graph built successfully!" << RESET << '\n';
 
     // Main menu loop
     int choice;
     std::string input, word1, word2;
 
     while (true) {
-        std::cout << "\n" << YELLOW << "===== Text Graph Processing System =====" << RESET << std::endl;
-        std::cout << "1. Display Graph" << std::endl;
-        std::cout << "2. Save Graph to File" << std::endl;
-        std::cout << "3. Find Bridge Words" << std::endl;
-        std::cout << "4. Generate Text with Bridge Words" << std::endl;
-        std::cout << "5. Find Shortest Path" << std::endl;
-        std::cout << "6. Calculate PageRank" << std::endl;
-        std::cout << "7. Random Walk" << std::endl;
-        std::cout << "0. Exit" << std::endl;
+        std::cout << "\n" << YELLOW << "===== Text Graph Processing System =====" << RESET << '\n';
+        std::cout << "1. Display Graph" << '\n';
+        std::cout << "2. Save Graph to File" << '\n';
+        std::cout << "3. Find Bridge Words" << '\n';
+        std::cout << "4. Generate Text with Bridge Words" << '\n';
+        std::cout << "5. Find Shortest Path" << '\n';
+        std::cout << "6. Calculate PageRank" << '\n';
+        std::cout << "7. Random Walk" << '\n';
+        std::cout << "0. Exit" << '\n';
         std::cout << "Enter your choice: ";
         std::cin >> choice;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
 
         switch (choice) {
         case 0:
-            std::cout << "Exiting program. Goodbye!" << std::endl;
+            std::cout << "Exiting program. Goodbye!" << '\n';
             return 0;
 
         case 1:
@@ -63,16 +63,22 @@ int main(int argc, char* argv[]) {
             std::string normalizedWord2 = normalizeWord(word2);
 
             if (!graph.containsWord(normalizedWord1) || !graph.containsWord(normalizedWord2)) {
-                std::cout << RED << "No " << ((!graph.containsWord(normalizedWord1) && !graph.containsWord(normalizedWord2)) ?
-                    normalizedWord1 + " or " + normalizedWord2 :
-                    (!graph.containsWord(normalizedWord1) ? normalizedWord1 : normalizedWord2))
-                    << " in the graph!" << RESET << std::endl;
+                std::string errorMsg = "No ";
+                if (!graph.containsWord(normalizedWord1) && !graph.containsWord(normalizedWord2)) {
+                    errorMsg += normalizedWord1;
+                    errorMsg += " or ";
+                    errorMsg += normalizedWord2;
+                } else {
+                    errorMsg += !graph.containsWord(normalizedWord1) ? normalizedWord1 : normalizedWord2;
+                }
+                errorMsg += " in the graph!";
+                std::cout << RED << errorMsg << RESET << '\n';
             }
             else {
                 std::vector<std::string> bridges = graph.findBridgeWords(normalizedWord1, normalizedWord2);
 
                 if (bridges.empty()) {
-                    std::cout << YELLOW << "No bridge words from " << normalizedWord1 << " to " << normalizedWord2 << "!" << RESET << std::endl;
+                    std::cout << YELLOW << "No bridge words from " << normalizedWord1 << " to " << normalizedWord2 << "!" << RESET << '\n';
                 }
                 else {
                     std::cout << GREEN << "The bridge words from " << normalizedWord1 << " to " << normalizedWord2 << " are: ";
@@ -87,7 +93,7 @@ int main(int argc, char* argv[]) {
                         }
                         std::cout << bridges[i];
                     }
-                    std::cout << "." << RESET << std::endl;
+                    std::cout << "." << RESET << '\n';
                 }
             }
             break;
@@ -97,7 +103,7 @@ int main(int argc, char* argv[]) {
             std::cout << "Enter text to process: ";
             std::getline(std::cin, input);
             std::string newText = graph.generateTextWithBridges(input);
-            std::cout << GREEN << "Generated text: " << RESET << newText << std::endl;
+            std::cout << GREEN << "Generated text: " << RESET << newText << '\n';
             break;
         }
 
@@ -106,14 +112,14 @@ int main(int argc, char* argv[]) {
             std::getline(std::cin, word1);
 
             if (word1.empty()) {
-                std::cout << RED << "Please enter at least one word." << RESET << std::endl;
+                std::cout << RED << "Please enter at least one word." << RESET << '\n';
                 break;
             }
 
             std::string normalizedWord1 = normalizeWord(word1);
 
             if (!graph.containsWord(normalizedWord1)) {
-                std::cout << RED << "No " << normalizedWord1 << " in the graph!" << RESET << std::endl;
+                std::cout << RED << "No " << normalizedWord1 << " in the graph!" << RESET << '\n';
                 break;
             }
 
@@ -126,14 +132,14 @@ int main(int argc, char* argv[]) {
                     graph.shortestPathsFromSource(normalizedWord1);
 
                 if (paths.empty()) {
-                    std::cout << YELLOW << "No paths found from " << normalizedWord1 << "." << RESET << std::endl;
+                    std::cout << YELLOW << "No paths found from " << normalizedWord1 << "." << RESET << '\n';
                 }
                 else {
-                    std::cout << BLUE << "Shortest paths from " << normalizedWord1 << " to all words:" << RESET << std::endl;
+                    std::cout << BLUE << "Shortest paths from " << normalizedWord1 << " to all words:" << RESET << '\n';
                     for (const auto& entry : paths) {
                         std::cout << GREEN << "To " << entry.first << ": " << RESET;
                         displayShortestPath(entry.second);
-                        std::cout << std::endl;
+                        std::cout << '\n';
                     }
                 }
             }
@@ -142,14 +148,14 @@ int main(int argc, char* argv[]) {
                 std::string normalizedWord2 = normalizeWord(word2);
 
                 if (!graph.containsWord(normalizedWord2)) {
-                    std::cout << RED << "No " << normalizedWord2 << " in the graph!" << RESET << std::endl;
+                    std::cout << RED << "No " << normalizedWord2 << " in the graph!" << RESET << '\n';
                     break;
                 }
 
                 std::pair<double, std::vector<std::string>> path =
                     graph.shortestPath(normalizedWord1, normalizedWord2);
 
-                std::cout << BLUE << "Shortest path from " << normalizedWord1 << " to " << normalizedWord2 << ":" << RESET << std::endl;
+                std::cout << BLUE << "Shortest path from " << normalizedWord1 << " to " << normalizedWord2 << ":" << RESET << '\n';
                 displayShortestPath(path);
             }
             break;
@@ -157,9 +163,9 @@ int main(int argc, char* argv[]) {
 
         case 6: {
             int prMethod;
-            std::cout << YELLOW << "选择 PageRank 计算方法：" << RESET << std::endl;
-            std::cout << "1. 标准 PageRank (均匀初始值)" << std::endl;
-            std::cout << "2. 基于 TF-IDF 的 PageRank" << std::endl;
+            std::cout << YELLOW << "选择 PageRank 计算方法：" << RESET << '\n';
+            std::cout << "1. 标准 PageRank (均匀初始值)" << '\n';
+            std::cout << "2. 基于 TF-IDF 的 PageRank" << '\n';
             std::cout << "请输入选择 (1-2): ";
             std::cin >> prMethod;
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 清除输入缓冲区
@@ -183,18 +189,19 @@ int main(int argc, char* argv[]) {
             // 根据用户选择计算 PageRank
             std::map<std::string, double> pageRanks;
             if (prMethod == 2) {
-                std::cout << BLUE << "使用 TF-IDF 作为初始 PageRank 值..." << RESET << std::endl;
+                std::cout << BLUE << "使用 TF-IDF 作为初始 PageRank 值..." << RESET << '\n';
                 pageRanks = graph.calculatePageRankWithTfIdf(fileName, dampingFactor, iterations);
             }
             else {
-                std::cout << BLUE << "使用标准 PageRank 计算..." << RESET << std::endl;
-                pageRanks = graph.calculatePageRank(dampingFactor, iterations, std::map<std::string, double>());
+                std::cout << BLUE << "使用标准 PageRank 计算..." << RESET << '\n';
+                pageRanks = graph.calculatePageRank(dampingFactor, std::map<std::string, double>(), iterations);
             }
 
             // 按 PageRank 值排序 (从高到低)
             std::vector<std::pair<std::string, double>> sortedRanks;
+            sortedRanks.reserve(pageRanks.size());
             for (const auto& entry : pageRanks) {
-                sortedRanks.push_back(entry);
+                sortedRanks.emplace_back(entry);
             }
 
             std::sort(sortedRanks.begin(), sortedRanks.end(),
@@ -211,14 +218,14 @@ int main(int argc, char* argv[]) {
                 displayCount = std::stoi(displayInput);
             }
 
-            std::cout << BLUE << "PageRank 值 (前 " << displayCount << "):" << RESET << std::endl;
-            std::cout << std::setw(15) << "单词" << std::setw(15) << "PageRank 值" << std::endl;
-            std::cout << std::string(30, '-') << std::endl;
+            std::cout << BLUE << "PageRank 值 (前 " << displayCount << "):" << RESET << '\n';
+            std::cout << std::setw(15) << "单词" << std::setw(15) << "PageRank 值" << '\n';
+            std::cout << std::string(30, '-') << '\n';
 
             // 显示排序后的结果
             for (size_t i = 0; i < std::min(sortedRanks.size(), static_cast<size_t>(displayCount)); ++i) {
                 std::cout << std::setw(15) << sortedRanks[i].first
-                    << std::setw(15) << std::fixed << std::setprecision(8) << sortedRanks[i].second << std::endl;
+                    << std::setw(15) << std::fixed << std::setprecision(8) << sortedRanks[i].second << '\n';
             }
 
             // 保存 PageRank 结果到文件
@@ -239,10 +246,10 @@ int main(int argc, char* argv[]) {
                         outFile << entry.first << "," << std::fixed << std::setprecision(6) << entry.second << "\n";
                     }
                     outFile.close();
-                    std::cout << GREEN << "PageRank 结果已保存到 " << outputFile << RESET << std::endl;
+                    std::cout << GREEN << "PageRank 结果已保存到 " << outputFile << RESET << '\n';
                 }
                 else {
-                    std::cerr << RED << "无法打开文件保存结果。" << RESET << std::endl;
+                    std::cerr << RED << "无法打开文件保存结果。" << RESET << '\n';
                 }
             }
             break;
@@ -252,15 +259,16 @@ int main(int argc, char* argv[]) {
             std::vector<std::string> walkPath = graph.randomWalk();
 
             if (walkPath.empty()) {
-                std::cout << RED << "Random walk could not be performed on the graph." << RESET << std::endl;
+                std::cout << RED << "Random walk could not be performed on the graph." << RESET << '\n';
+                break;
             }
             else {
-                std::cout << GREEN << "Random Walk Path:" << RESET << std::endl;
+                std::cout << GREEN << "Random Walk Path:" << RESET << '\n';
                 for (size_t i = 0; i < walkPath.size(); ++i) {
                     if (i > 0) std::cout << " -> ";
                     std::cout << walkPath[i];
                 }
-                std::cout << std::endl;
+                std::cout << '\n';
 
                 // Save walk to file
                 std::ofstream walkFile("random_walk.txt");
@@ -270,17 +278,17 @@ int main(int argc, char* argv[]) {
                         if (i < walkPath.size() - 1) walkFile << " ";
                     }
                     walkFile.close();
-                    std::cout << "Random walk saved to random_walk.txt" << std::endl;
+                    std::cout << "Random walk saved to random_walk.txt" << '\n';
                 }
                 else {
-                    std::cerr << "Could not save random walk to file." << std::endl;
+                    std::cerr << "Could not save random walk to file." << '\n';
                 }
             }
             break;
         }
 
         default:
-            std::cout << RED << "Invalid choice. Please try again." << RESET << std::endl;
+            std::cout << RED << "Invalid choice. Please try again." << RESET << '\n';
         }
     }
 

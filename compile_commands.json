@@ -1,0 +1,50 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++11",
+      "-Wall",
+      "-Wextra",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/Graph.o",
+      "src/Graph.cpp"
+    ],
+    "directory": "/home/butterfly-qsy/Software_Engineering/lab1-lab3",
+    "file": "/home/butterfly-qsy/Software_Engineering/lab1-lab3/src/Graph.cpp",
+    "output": "/home/butterfly-qsy/Software_Engineering/lab1-lab3/obj/Graph.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++11",
+      "-Wall",
+      "-Wextra",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/Tools.o",
+      "src/Tools.cpp"
+    ],
+    "directory": "/home/butterfly-qsy/Software_Engineering/lab1-lab3",
+    "file": "/home/butterfly-qsy/Software_Engineering/lab1-lab3/src/Tools.cpp",
+    "output": "/home/butterfly-qsy/Software_Engineering/lab1-lab3/obj/Tools.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++11",
+      "-Wall",
+      "-Wextra",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/butterfly-qsy/Software_Engineering/lab1-lab3",
+    "file": "/home/butterfly-qsy/Software_Engineering/lab1-lab3/src/main.cpp",
+    "output": "/home/butterfly-qsy/Software_Engineering/lab1-lab3/obj/main.o"
+  }
+]

@@ -32,8 +32,7 @@ private:
         std::string dest;
         int weight;
 
-        Edge(const std::string& d, int w) : dest(d), weight(w) {}
-
+        Edge(std::string d, int w) : dest(std::move(d)), weight(w) {} // 按值传递并使用 std::move
         bool operator<(const Edge& other) const {
             return dest < other.dest;
         }
@@ -53,15 +52,15 @@ public:
     std::string generateTextWithBridges(const std::string& inputText);
     std::pair<double, std::vector<std::string>> shortestPath(const std::string& start, const std::string& end) const;
     std::map<std::string, std::pair<double, std::vector<std::string>>> shortestPathsFromSource(const std::string& start) const;
-    std::map<std::string, double> calculatePageRank(double dampingFactor = 0.85, int iterations = 100,
-        std::map<std::string, double> customInitialRanks = std::map<std::string, double>()) const;
+    std::map<std::string, double> calculatePageRank(double dampingFactor = 0.85, 
+        std::map<std::string, double> customInitialRanks = std::map<std::string, double>(), int iterations = 100) const;
     std::map<std::string, double> calculateTfIdfRanks(const std::string& filePath) const;
     std::map<std::string, double> calculatePageRankWithTfIdf(const std::string& filePath,
         double dampingFactor,
         int iterations) const;
     std::vector<std::string> randomWalk();
     bool containsWord(const std::string& word) const;
-    std::vector<std::string> getAllVertices() const;
+    // std::vector<std::string> getAllVertices() const;
 };
 
 #endif // GRAPH_H

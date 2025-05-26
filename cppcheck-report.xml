@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+    <cppcheck version="2.13.0"/>
+    <errors>
+        <error id="useStlAlgorithm" severity="style" msg="Consider using std::replace_if algorithm instead of a raw loop." verbose="Consider using std::replace_if algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
+            <location file="src/Graph.cpp" line="21" column="15"/>
+        </error>
+        <error id="useStlAlgorithm" severity="style" msg="Consider using std::find_if algorithm instead of a raw loop." verbose="Consider using std::find_if algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
+            <location file="src/Graph.cpp" line="58" column="32"/>
+        </error>
+        <error id="useStlAlgorithm" severity="style" msg="Consider using std::any_of algorithm instead of a raw loop." verbose="Consider using std::any_of algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
+            <location file="src/Graph.cpp" line="151" column="47"/>
+        </error>
+        <error id="useStlAlgorithm" severity="style" msg="Consider using std::any_of algorithm instead of a raw loop." verbose="Consider using std::any_of algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
+            <location file="src/Graph.cpp" line="161" column="47"/>
+        </error>
+        <error id="useStlAlgorithm" severity="style" msg="Consider using std::transform algorithm instead of a raw loop." verbose="Consider using std::transform algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
+            <location file="src/Graph.cpp" line="334" column="18"/>
+        </error>
+        <error id="useStlAlgorithm" severity="style" msg="Consider using std::accumulate algorithm instead of a raw loop." verbose="Consider using std::accumulate algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
+            <location file="src/Graph.cpp" line="460" column="33"/>
+        </error>
+        <error id="useStlAlgorithm" severity="style" msg="Consider using std::accumulate algorithm instead of a raw loop." verbose="Consider using std::accumulate algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
+            <location file="src/Graph.cpp" line="595" column="13"/>
+        </error>
+        <error id="useStlAlgorithm" severity="style" msg="Consider using std::copy algorithm instead of a raw loop." verbose="Consider using std::copy algorithm instead of a raw loop." cwe="398" file0="src/main.cpp">
+            <location file="src/main.cpp" line="204" column="29"/>
+        </error>
+        <error id="checkersReport" severity="information" msg="Active checkers: 161/592 (use --checkers-report=&lt;filename&gt; to see details)" verbose="Active checkers: 161/592 (use --checkers-report=&lt;filename&gt; to see details)"/>
+    </errors>
+</results>
