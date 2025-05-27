@@ -323,44 +323,36 @@ std::vector<std::string> Graph::randomWalk() {
     if (adjacencyList.empty()) {
         return {}; // Empty graph
     }
-
     std::vector<std::string> path;
     std::set<std::pair<std::string, std::string>> visitedEdges;
-
     // Choose a random starting vertex
     std::vector<std::string> vertices;
     vertices.reserve(adjacencyList.size()); // 预分配容量
     for (const auto& entry : adjacencyList) {
         vertices.push_back(entry.first);
     }
-
     std::uniform_int_distribution<size_t> dist(0, vertices.size() - 1);
     std::string current = vertices[dist(rng)];
     path.push_back(current);
-
     while (true) {
         // Check if current vertex has outgoing edges
         if (adjacencyList.at(current).empty()) {
             break; // Stop if no outgoing edges
         }
-
         // Choose a random outgoing edge
         const std::vector<Edge>& edges = adjacencyList.at(current);
         std::uniform_int_distribution<size_t> edgeDist(0, edges.size() - 1);
         const Edge& edge = edges[edgeDist(rng)];
-
         // Check if this edge has been visited
         std::pair<std::string, std::string> edgePair = { current, edge.dest };
         if (visitedEdges.find(edgePair) != visitedEdges.end()) {
             break; // Stop if edge already visited
         }
-
         // Add edge to visited and add destination to path
         visitedEdges.insert(edgePair);
         current = edge.dest;
         path.push_back(current);
     }
-
     return path;
 }
 

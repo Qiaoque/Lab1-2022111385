@@ -15,13 +15,13 @@
             <location file="src/Graph.cpp" line="161" column="47"/>
         </error>
         <error id="useStlAlgorithm" severity="style" msg="Consider using std::transform algorithm instead of a raw loop." verbose="Consider using std::transform algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
-            <location file="src/Graph.cpp" line="334" column="18"/>
+            <location file="src/Graph.cpp" line="332" column="18"/>
         </error>
         <error id="useStlAlgorithm" severity="style" msg="Consider using std::accumulate algorithm instead of a raw loop." verbose="Consider using std::accumulate algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
-            <location file="src/Graph.cpp" line="460" column="33"/>
+            <location file="src/Graph.cpp" line="452" column="33"/>
         </error>
         <error id="useStlAlgorithm" severity="style" msg="Consider using std::accumulate algorithm instead of a raw loop." verbose="Consider using std::accumulate algorithm instead of a raw loop." cwe="398" file0="src/Graph.cpp">
-            <location file="src/Graph.cpp" line="595" column="13"/>
+            <location file="src/Graph.cpp" line="587" column="13"/>
         </error>
         <error id="useStlAlgorithm" severity="style" msg="Consider using std::copy algorithm instead of a raw loop." verbose="Consider using std::copy algorithm instead of a raw loop." cwe="398" file0="src/main.cpp">
             <location file="src/main.cpp" line="204" column="29"/>
