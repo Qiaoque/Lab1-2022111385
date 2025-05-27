@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - include/Graph.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">include</a> - Graph.h<span style="font-size: 80%;"> (source / <a href="Graph.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2025-05-27 21:11:00</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : #ifndef GRAPH_H</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             : #define GRAPH_H</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             : </span>
+<span id="L4"><span class="lineNum">       4</span>                 :             : #include &lt;iostream&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             : #include &lt;fstream&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             : #include &lt;sstream&gt;</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             : #include &lt;string&gt;</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             : #include &lt;vector&gt;</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             : #include &lt;map&gt;</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             : #include &lt;set&gt;</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             : #include &lt;queue&gt;</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             : #include &lt;algorithm&gt;</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #include &lt;cctype&gt;</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #include &lt;random&gt;</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #include &lt;ctime&gt;</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &lt;limits&gt;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &lt;stack&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &lt;iomanip&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : // For graph visualization</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;fstream&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : </span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #define RESET   &quot;\033[0m&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #define RED     &quot;\033[31m&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #define GREEN   &quot;\033[32m&quot;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #define BLUE    &quot;\033[34m&quot;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #define YELLOW  &quot;\033[33m&quot;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : class Graph {</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : private:</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :     struct Edge {</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :         std::string dest;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :         int weight;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : </span>
+<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC tlaBgGNC">         117 :         Edge(std::string d, int w) : dest(std::move(d)), weight(w) {} // 按值传递并使用 std::move</span></span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :         bool operator&lt;(const Edge&amp; other) const {</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :             return dest &lt; other.dest;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :         }</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :     };</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     // Adjacency list representation</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     std::map&lt;std::string, std::vector&lt;Edge&gt;&gt; adjacencyList;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     // Random number generator</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     std::mt19937 rng;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : </span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : public:</span>
+<span id="L46"><span class="lineNum">      46</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          13 :     Graph() : rng(static_cast&lt;unsigned int&gt;(time(nullptr))) {}</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :     bool buildFromFile(const std::string&amp; filePath);</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :     void addEdge(const std::string&amp; src, const std::string&amp; dest);</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :     void displayGraph() const;</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     bool saveGraphToFile(const std::string&amp; filename) const;</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     std::vector&lt;std::string&gt; findBridgeWords(const std::string&amp; word1, const std::string&amp; word2) const;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     std::string generateTextWithBridges(const std::string&amp; inputText);</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :     std::pair&lt;double, std::vector&lt;std::string&gt;&gt; shortestPath(const std::string&amp; start, const std::string&amp; end) const;</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     std::map&lt;std::string, std::pair&lt;double, std::vector&lt;std::string&gt;&gt;&gt; shortestPathsFromSource(const std::string&amp; start) const;</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     std::map&lt;std::string, double&gt; calculatePageRank(double dampingFactor = 0.85, </span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :         std::map&lt;std::string, double&gt; customInitialRanks = std::map&lt;std::string, double&gt;(), int iterations = 100) const;</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     std::map&lt;std::string, double&gt; calculateTfIdfRanks(const std::string&amp; filePath) const;</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     std::map&lt;std::string, double&gt; calculatePageRankWithTfIdf(const std::string&amp; filePath,</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :         double dampingFactor,</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :         int iterations) const;</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :     std::vector&lt;std::string&gt; randomWalk();</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :     bool containsWord(const std::string&amp; word) const;</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     // std::vector&lt;std::string&gt; getAllVertices() const;</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : };</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : </span>
+<span id="L66"><span class="lineNum">      66</span>                 :             : #endif // GRAPH_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
