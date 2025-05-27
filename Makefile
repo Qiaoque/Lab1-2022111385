@@ -1,8 +1,17 @@
 # 编译器设置
 CXX := g++
-CXXFLAGS := -std=c++11 -Wall -Wextra -Iinclude
-GTEST_CXXFLAGS := -std=c++17 -Wall -Wextra -Iinclude # gtest 需要 C++17
+CXXFLAGS := -std=c++11 -Wall -Wextra -Iinclude --coverage
+GTEST_CXXFLAGS := -std=c++17 -Wall -Wextra -Iinclude --coverage
 GTEST_LIBS := -lgtest -lgtest_main -pthread
+
+# 项目目录结构
+SRC_DIR := src
+INC_DIR := include
+BIN_DIR := bin
+OBJ_DIR := obj
+TEST_DIR := test
+GTEST_DIR := gtest
+TEST_FILE := $(TEST_DIR)/test.txt
 
 # 静态分析工具设置
 ## Clang-Tidy 设置
@@ -12,27 +21,25 @@ TIDY_FLAGS := -p $(CURDIR) --header-filter="$(INC_DIR)/.*"
 TIDY_REPORT := clang-tidy-report.txt
 TIDY_FIXES := clang-tidy-fixes.yaml
 
-# 项目目录结构
-SRC_DIR := src
-INC_DIR := include
-BIN_DIR := bin
-OBJ_DIR := obj
-TEST_DIR := test
-TEST_FILE := $(TEST_DIR)/test.txt
-
 ## Cppcheck 设置
 CPPCHECK := cppcheck
 CPPCHECK_FLAGS := --enable=all --std=c++11 --suppress=missingIncludeSystem -I $(INC_DIR) --inline-suppr --suppress=unmatchedSuppression
 CPPCHECK_REPORT := cppcheck-report.xml
 
+# 覆盖率报告相关设置
+COV_DIR := coverage
+COV_INFO := coverage.info
+COV_REPORT := $(COV_DIR)/index.html
+
 # 源文件和目标文件
-SRCS := $(filter-out $(SRC_DIR)/bridge_test.cpp, $(wildcard $(SRC_DIR)/*.cpp))
+SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 EXEC := $(BIN_DIR)/text_graph
 
 # gtest 相关设置
-GTEST_SRC := $(SRC_DIR)/bridge_test.cpp $(SRC_DIR)/Graph.cpp $(SRC_DIR)/Tools.cpp
-GTEST_EXEC := $(BIN_DIR)/bridge_test
+GTEST_SRC := $(wildcard $(GTEST_DIR)/*.cpp) $(SRC_DIR)/Graph.cpp $(SRC_DIR)/Tools.cpp
+GTEST_OBJS := $(patsubst $(GTEST_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(wildcard $(GTEST_DIR)/*.cpp)) $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_DIR)/Graph.cpp $(SRC_DIR)/Tools.cpp)
+GTEST_EXECS := $(BIN_DIR)/bridge_test $(BIN_DIR)/randomwalk_test
 
 # 主目标
 all: $(EXEC)
@@ -45,26 +52,38 @@ $(EXEC): $(OBJS) | $(BIN_DIR)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# 编译 gtest 源文件
+$(OBJ_DIR)/%.o: $(GTEST_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(GTEST_CXXFLAGS) -c $< -o $@
+
 # 创建必要的目录
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
 # gtest 目标：编译和链接单元测试
-gtest: $(GTEST_EXEC)
+gtest: $(GTEST_EXECS)
 
-$(GTEST_EXEC): $(GTEST_SRC) | $(BIN_DIR)
-	$(CXX) $(GTEST_CXXFLAGS) $(GTEST_SRC) $(GTEST_LIBS) -o $@
+# 链接 bridge_test 可执行文件
+$(BIN_DIR)/bridge_test: $(OBJ_DIR)/bridge_test.o $(OBJ_DIR)/Graph.o $(OBJ_DIR)/Tools.o | $(BIN_DIR)
+	$(CXX) $(GTEST_CXXFLAGS) $^ $(GTEST_LIBS) -o $@
+
+# 链接 randomwalk_test 可执行文件
+$(BIN_DIR)/randomwalk_test: $(OBJ_DIR)/randomwalk_test.o $(OBJ_DIR)/Graph.o $(OBJ_DIR)/Tools.o | $(BIN_DIR)
+	$(CXX) $(GTEST_CXXFLAGS) $^ $(GTEST_LIBS) -o $@
 
 # 运行 gtest 单元测试
-test-gtest: $(GTEST_EXEC)
+test-gtest: $(GTEST_EXECS)
 	@echo "Running gtest unit tests..."
-	@./$(GTEST_EXEC)
+	@for exec in $(GTEST_EXECS); do \
+		echo "Running $$exec..."; \
+		./$$exec || exit 1; \
+	done
 
 # 清理生成的文件
-clean:
+clean: clean-coverage
 	rm -rf $(OBJ_DIR) $(BIN_DIR) $(COMPILE_COMMANDS) \
         $(TIDY_REPORT) $(TIDY_FIXES) \
-        $(CPPCHECK_REPORT) $(GTEST_EXEC)
+        $(CPPCHECK_REPORT) $(GTEST_EXECS)
 
 # 重新编译
 rebuild: clean all
@@ -116,6 +135,19 @@ cppcheck:
 		exit 1; \
 	}
 	@echo "XML 报告已保存至 $(CPPCHECK_REPORT)"
+
+# 生成覆盖率报告
+coverage: test-gtest
+	@echo "Generating coverage report..."
+	@mkdir -p $(COV_DIR)
+	@lcov --capture --directory $(OBJ_DIR) --output-file $(COV_INFO) --rc branch_coverage=1 --ignore-errors mismatch
+	@lcov --remove $(COV_INFO) '/usr/*' '$(GTEST_DIR)/*' --output-file $(COV_INFO) --rc branch_coverage=1
+	@genhtml $(COV_INFO) --output-directory $(COV_DIR) --rc branch_coverage=1
+	@echo "Coverage report generated at $(COV_REPORT)"
+
+# 清理覆盖率相关文件
+clean-coverage:
+	rm -rf $(COV_DIR) $(COV_INFO) $(OBJ_DIR)/*.gcda $(OBJ_DIR)/*.gcno
 
 # 综合静态分析目标
 static-analysis: tidy cppcheck
